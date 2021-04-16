@@ -9,9 +9,7 @@ import (
 )
 
 func Availability(w http.ResponseWriter, r *http.Request) {
-	data := availability.FetchDistance()
-
-	// pretty.Println(data)
+	data, status := availability.AvailabilityResponse()
 
 	json, err := json.MarshalIndent(data, "", "	")
 	if err != nil {
@@ -22,6 +20,7 @@ func Availability(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Access-Control-Max-Age", "3600")
+	w.WriteHeader(status)
 
 	fmt.Fprint(w, string(json))
 }

@@ -24,3 +24,16 @@ func main() {
 		log.Fatalf("funcframework.Start: %v\n", err)
 	}
 }
+
+// func main() {
+// 	data := availability.AvailabilityResponse()
+
+// 	pretty.Println(data)
+
+// 	json, err := json.MarshalIndent(data, "", "	")
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	fmt.Println(string(json))
+
+// }

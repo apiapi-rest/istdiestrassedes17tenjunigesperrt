@@ -2,11 +2,10 @@ package availability
 
 import (
 	"context"
-	"log"
+	"net/http"
 	"os"
 	"time"
 
-	"github.com/kr/pretty"
 	"googlemaps.github.io/maps"
 )
 
@@ -18,7 +17,9 @@ const (
 )
 
 type Response struct {
-	Data Data
+	Data    Data   `json:"data"`
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
 }
 
 type Data struct {
@@ -27,25 +28,32 @@ type Data struct {
 	Duration time.Duration `json:"duration"`
 }
 
-// func main() {
-// 	data := fetch()
+func AvailabilityResponse() (Response, int) {
+	matrixResponse, err := FetchDistance()
+	if err != nil {
+		return Response{
+			Data:    Data{},
+			Error:   err.Error(),
+			Success: false,
+		}, http.StatusServiceUnavailable
+	}
+	data := BuildData(matrixResponse, threshold)
 
-// 	pretty.Println(data)
+	return Response{
+		Data:    data,
+		Error:   "",
+		Success: true,
+	}, http.StatusOK
+}
 
-// 	json, err := json.MarshalIndent(data, "", "	")
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	fmt.Println(string(json))
-
-// }
-
-func FetchDistance() Data {
+func FetchDistance() (*maps.DistanceMatrixResponse, error) {
 	c, err := maps.NewClient(maps.WithAPIKey(os.Getenv("GOOGLE_API_KEY")))
 
 	if err != nil {
-		log.Fatalf("fatal error: %s", err)
+		// log.Fatalf("NewClient Rrror: %s", err)
+		return nil, err
 	}
+
 	r := &maps.DistanceMatrixRequest{
 		Mode:         travelMode,
 		Origins:      []string{travelOrigin},
@@ -54,16 +62,20 @@ func FetchDistance() Data {
 
 	matrixResponse, err := c.DistanceMatrix(context.Background(), r)
 	if err != nil {
-		log.Fatalf("fatal error: %s", err)
+		// log.Fatalf("fatal error: %s", err)
+		return nil, err
 	}
+	return matrixResponse, nil
 
+}
+
+func BuildData(matrixResponse *maps.DistanceMatrixResponse, currentThreshold int) Data {
 	distance := matrixResponse.Rows[0].Elements[0].Distance.Meters
 
-	response := Data{
-		Blocked:  distance > threshold,
+	data := Data{
+		Blocked:  distance > currentThreshold,
 		Distance: distance,
 		Duration: matrixResponse.Rows[0].Elements[0].Duration / 1000 / 1000 / 1000,
 	}
-	pretty.Println(matrixResponse)
-	return response
+	return data
 }
