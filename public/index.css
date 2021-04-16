@@ -1,0 +1,41 @@
+body {
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+#container {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 100%;
+  min-height: 400px;
+}
+header {
+  font-size: 30px;
+}
+#ja,
+#nein {
+  display: none;
+}
+
+b {
+  font-size: 360px;
+}
+
+p {
+  font-size: 15px;
+}
+footer {
+  clear: both;
+  padding-top: 9px;
+  font-size: 10px;
+}
+section#history {
+  max-width: 640px;
+  margin: auto;
+}
+
+.show {
+  display: block !important;
+}
