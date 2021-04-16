@@ -1,9 +1,7 @@
-package main
+package availability
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -11,8 +9,6 @@ import (
 	"github.com/kr/pretty"
 	"googlemaps.github.io/maps"
 )
-
-var ()
 
 const (
 	travelMode        = maps.TravelModeDriving
@@ -31,20 +27,20 @@ type Data struct {
 	Duration time.Duration `json:"duration"`
 }
 
-func main() {
-	data := fetch()
+// func main() {
+// 	data := fetch()
 
-	pretty.Println(data)
+// 	pretty.Println(data)
 
-	json, err := json.MarshalIndent(data, "", "	")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(json))
+// 	json, err := json.MarshalIndent(data, "", "	")
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	fmt.Println(string(json))
 
-}
+// }
 
-func fetch() Data {
+func FetchDistance() Data {
 	c, err := maps.NewClient(maps.WithAPIKey(os.Getenv("GOOGLE_API_KEY")))
 
 	if err != nil {
