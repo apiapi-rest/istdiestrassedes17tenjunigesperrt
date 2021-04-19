@@ -50,7 +50,6 @@ func FetchDistance() (*maps.DistanceMatrixResponse, error) {
 	c, err := maps.NewClient(maps.WithAPIKey(os.Getenv("GOOGLE_API_KEY")))
 
 	if err != nil {
-		// log.Fatalf("NewClient Rrror: %s", err)
 		return nil, err
 	}
 
@@ -62,7 +61,6 @@ func FetchDistance() (*maps.DistanceMatrixResponse, error) {
 
 	matrixResponse, err := c.DistanceMatrix(context.Background(), r)
 	if err != nil {
-		// log.Fatalf("fatal error: %s", err)
 		return nil, err
 	}
 	return matrixResponse, nil
