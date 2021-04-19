@@ -11,4 +11,4 @@ static:
 	cd public && rsync --stats -havz --exclude='.git/' ./  ${SSH_USER}@istdiestrassedes17tenjunigesperrt.de:~/istdiestrassedes17tenjunigesperrt.de/ --delete && cd ..
 
 magic:
-	make static; make gcloud;
+	make test && make static && make gcloud;
