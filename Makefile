@@ -5,10 +5,23 @@ start:
 	go run cmd/main.go & php -S localhost:8080 -t public
 
 test:
-	go test -v ./tests/
+	go test -v ./tests/...
 
 static:
 	cd public && rsync --stats -havz --exclude='.git/' ./  ${SSH_USER}@istdiestrassedes17tenjunigesperrt.de:~/istdiestrassedes17tenjunigesperrt.de/ --delete && cd ..
 
 magic:
 	make test && make static && make gcloud;
+
+
+cloud-build:
+	gcloud builds submit --tag gcr.io/istdiestrassedes17tenjunigespe/api
+
+cloud-run:
+	gcloud run deploy --image gcr.io/istdiestrassedes17tenjunigespe/api --memory=128M --platform managed
+
+local-run:
+	docker run --env PORT=3000 -p 3000:3000 istdiestrassedes17tenjunigespert_api
+
+local-build:
+	docker build -t istdiestrassedes17tenjunigespert_api .
