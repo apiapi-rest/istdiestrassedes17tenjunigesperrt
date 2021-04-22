@@ -21,7 +21,7 @@ cloud-run:
 	gcloud run deploy --image gcr.io/istdiestrassedes17tenjunigespe/api --memory=128M --platform managed
 
 local-run:
-	docker run --env PORT=3000 -p 3000:3000 istdiestrassedes17tenjunigespert_api
+	docker run --env PORT=3000 --env GOOGLE_API_KEY='${GOOGLE_API_KEY}' -p 3000:3000 istdiestrassedes17tenjunigesperrt_api
 
 local-build:
-	docker build -t istdiestrassedes17tenjunigespert_api .
+	docker build -t istdiestrassedes17tenjunigesperrt_api .

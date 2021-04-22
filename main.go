@@ -24,7 +24,7 @@ func main() {
 	log.Printf("listening on port %s", port)
 
 	s := &http.Server{
-		Addr:         fmt.Sprintf("localhost:%s", port),
+		Addr:         fmt.Sprintf(":%s", port),
 		Handler:      handler.Mux(),
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
