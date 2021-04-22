@@ -1,27 +1,36 @@
-package main
+package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 
 	"apiapi.rest/istdiestrassedes17tenjunigesperrt/availability"
+	"apiapi.rest/istdiestrassedes17tenjunigesperrt/handler"
 )
 
-func TestHttp(t *testing.T) {
-	// Determine port for HTTP service.
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-		log.Printf("defaulting to port %s", port)
-	}
-	// Start HTTP server.
-	log.Printf("listening on port %s", port)
+func TestMain(m *testing.M) {
+	// fmt.SetOutput(ioutil.Discard)
+	os.Exit(m.Run())
+}
 
-	url := fmt.Sprintf("http://localhost:%s", port)
+func setupAPI(t *testing.T) (string, func()) {
+	t.Helper()
+
+	ts := httptest.NewServer(handler.Mux())
+
+	return ts.URL, func() {
+		ts.Close()
+
+	}
+}
+
+func TestHttp(t *testing.T) {
+	url, cleanup := setupAPI(t)
+	defer cleanup()
 
 	log.Print(url)
 
