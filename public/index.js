@@ -1,8 +1,8 @@
 window.onload = () => {
   fetch(
     window.location.host === `localhost:8080`
-      ? `http://localhost:8081/availability`
-      : `https://europe-west3-istdiestrassedes17tenjunigespe.cloudfunctions.net/availability`,
+      ? `http://localhost:3000/availability`
+      : `https://istdiestrassedes17tenjunigesperrt.apiapi.rest/availability`,
     {
       method: "GET",
       cors: false,
