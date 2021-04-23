@@ -21,7 +21,7 @@ func TestSuccssResponse(t *testing.T) {
 		t.Errorf("Wrong response attribute for success: %t - expected: %t", response.Success, true)
 	}
 	if len(response.Error) > 0 {
-		t.Errorf("Error message thrown. Expected a string with length > 0.")
+		t.Errorf("Error message thrown. Expected a string with length == 0. Erorr Message says: %s", response.Error)
 	}
 }
 func TestErrorResponse(t *testing.T) {
