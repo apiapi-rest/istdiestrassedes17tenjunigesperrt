@@ -33,13 +33,22 @@ type Data struct {
 func AvailabilityResponse() (Response, int) {
 	matrixResponse, err := FetchDistance()
 	if err != nil {
-		return Response{
-			Data:    Data{},
-			Error:   err.Error(),
-			Success: false,
-		}, http.StatusServiceUnavailable
+		return ErrorResponse(err)
 	}
 	data := BuildData(matrixResponse, threshold)
+
+	return SuccessResponse(data)
+}
+
+func ErrorResponse(err error) (Response, int) {
+	return Response{
+		Data:    Data{},
+		Error:   err.Error(),
+		Success: false,
+	}, http.StatusServiceUnavailable
+}
+
+func SuccessResponse(data Data) (Response, int) {
 
 	return Response{
 		Data:    data,
