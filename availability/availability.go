@@ -2,10 +2,12 @@ package availability
 
 import (
 	"context"
+	"fmt"
 	"net/http"
-	"os"
 	"time"
 
+	secretmanager "cloud.google.com/go/secretmanager/apiv1"
+	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
 	"googlemaps.github.io/maps"
 )
 
@@ -47,7 +49,12 @@ func AvailabilityResponse() (Response, int) {
 }
 
 func FetchDistance() (*maps.DistanceMatrixResponse, error) {
-	c, err := maps.NewClient(maps.WithAPIKey(os.Getenv("GOOGLE_API_KEY")))
+	apiKey, err := accessSecretVersion("projects/istdiestrassedes17tenjunigespe/secrets/GOOGLE_API_KEY/versions/latest")
+	if err != nil {
+		return nil, err
+	}
+
+	c, err := maps.NewClient(maps.WithAPIKey(apiKey))
 
 	if err != nil {
 		return nil, err
@@ -76,4 +83,31 @@ func BuildData(matrixResponse *maps.DistanceMatrixResponse, currentThreshold int
 		Duration: matrixResponse.Rows[0].Elements[0].Duration / 1000 / 1000 / 1000,
 	}
 	return data
+}
+
+// accessSecretVersion accesses the payload for the given secret version if one exists.
+// https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets?hl=de#secretmanager-access-secret-version-go
+func accessSecretVersion(name string) (string, error) {
+	// name := "projects/my-project/secrets/my-secret/versions/5"
+	// name := "projects/my-project/secrets/my-secret/versions/latest"
+
+	// Create the client.
+	ctx := context.Background()
+	client, err := secretmanager.NewClient(ctx)
+	if err != nil {
+		return "", fmt.Errorf("failed to create secretmanager client: %v", err)
+	}
+
+	// Build the request.
+	req := &secretmanagerpb.AccessSecretVersionRequest{
+		Name: name,
+	}
+
+	// Call the API.
+	result, err := client.AccessSecretVersion(ctx, req)
+	if err != nil {
+		return "", fmt.Errorf("failed to access secret version: %v", err)
+	}
+
+	return string(result.Payload.Data), nil
 }

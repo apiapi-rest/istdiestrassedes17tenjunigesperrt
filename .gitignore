@@ -3,3 +3,4 @@
 .env
 tmp
 __debug_bin
+.google-serviceaccount.json
