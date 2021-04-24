@@ -11,4 +11,4 @@ vendor/
 
 # Exclude git history and configuration.
 .gitignore
-.google-serviceaccount.json
+key.json
