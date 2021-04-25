@@ -1,15 +1,15 @@
 package availability
 
 import (
+	"errors"
 	"net/http"
-	"os"
 	"testing"
 
 	"apiapi.rest/istdiestrassedes17tenjunigesperrt/availability"
 	"googlemaps.github.io/maps"
 )
 
-func TestSuccssResponse(t *testing.T) {
+func TestAvailabilityResponse(t *testing.T) {
 
 	response, statusCode := availability.AvailabilityResponse()
 
@@ -21,17 +21,34 @@ func TestSuccssResponse(t *testing.T) {
 		t.Errorf("Wrong response attribute for success: %t - expected: %t", response.Success, true)
 	}
 	if len(response.Error) > 0 {
-		t.Errorf("Error message thrown. Expected a string with length > 0.")
+		t.Errorf("Error message thrown. Expected a string with length == 0. Erorr Message says: %s", response.Error)
 	}
 }
-func TestErrorResponse(t *testing.T) {
-	original := os.Getenv("GOOGLE_API_KEY")
-	os.Setenv("GOOGLE_API_KEY", "")
-	defer func() {
-		os.Setenv("GOOGLE_API_KEY", original)
-	}()
+func TestSuccessResponse(t *testing.T) {
+	data := availability.Data{
+		Blocked:  true,
+		Distance: 3800,
+		Duration: 3000,
+	}
+	response, statusCode := availability.SuccessResponse(data)
 
-	response, statusCode := availability.AvailabilityResponse()
+	if statusCode != http.StatusOK {
+		t.Errorf("Wrong statuscode: %d - expected: %d", statusCode, http.StatusOK)
+	}
+
+	if response.Success != true {
+		t.Errorf("Wrong response attribute for success: %t - expected: %t", response.Success, true)
+	}
+
+	if len(response.Error) > 0 {
+		t.Errorf("Error message thrown. Expected a string with length == 0. Erorr Message says: %s", response.Error)
+	}
+}
+
+func TestErrorResponse(t *testing.T) {
+	name := "test: error."
+	err := errors.New(name)
+	response, statusCode := availability.ErrorResponse(err)
 
 	if statusCode != http.StatusServiceUnavailable {
 		t.Errorf("Wrong statuscode: %d - expected: %d", statusCode, http.StatusServiceUnavailable)
@@ -40,8 +57,8 @@ func TestErrorResponse(t *testing.T) {
 	if response.Success != false {
 		t.Errorf("Wrong response attribute for success: %t - expected: %t", response.Success, false)
 	}
-	if len(response.Error) == 0 {
-		t.Errorf("No error message thrown. Expected a string with length > 0.")
+	if response.Error != name {
+		t.Errorf("Wrong error message thrown. Got: \"%s\", expected \"%s\".", response.Error, name)
 	}
 }
 
