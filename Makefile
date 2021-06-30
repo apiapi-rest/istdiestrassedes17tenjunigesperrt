@@ -5,7 +5,7 @@ start:
 	php -S localhost:8080 -t public
 
 test:
-	go test -v ./tests/...
+	go test -v ./...
 
 static:
 	cd public && rsync --stats -havz --exclude='.git/' ./  ${SSH_USER}@istdiestrassedes17tenjunigesperrt.de:~/istdiestrassedes17tenjunigesperrt.de/ --delete && cd ..
@@ -38,4 +38,7 @@ local-serviceaccount:
 	gcloud iam service-accounts keys create key.json --iam-account=serviceaccount@istdiestrassedes17tenjunigespe.iam.gserviceaccount.com
 
 make local-magic:
-	make local-build && make local-run
+	make test && make local-build && make local-run
+
+cloud-magic:
+	make test && make cloud-build && make cloud-run

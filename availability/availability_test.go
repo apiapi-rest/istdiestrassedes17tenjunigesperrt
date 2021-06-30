@@ -5,13 +5,12 @@ import (
 	"net/http"
 	"testing"
 
-	"apiapi.rest/istdiestrassedes17tenjunigesperrt/availability"
 	"googlemaps.github.io/maps"
 )
 
 func TestAvailabilityResponse(t *testing.T) {
 
-	response, statusCode := availability.AvailabilityResponse()
+	response, statusCode := AvailabilityResponse()
 
 	if statusCode != http.StatusOK {
 		t.Errorf("Wrong statuscode: %d - expected: %d", statusCode, http.StatusOK)
@@ -25,12 +24,12 @@ func TestAvailabilityResponse(t *testing.T) {
 	}
 }
 func TestSuccessResponse(t *testing.T) {
-	data := availability.Data{
+	data := Data{
 		Blocked:  true,
 		Distance: 3800,
 		Duration: 3000,
 	}
-	response, statusCode := availability.SuccessResponse(data)
+	response, statusCode := SuccessResponse(data)
 
 	if statusCode != http.StatusOK {
 		t.Errorf("Wrong statuscode: %d - expected: %d", statusCode, http.StatusOK)
@@ -48,7 +47,7 @@ func TestSuccessResponse(t *testing.T) {
 func TestErrorResponse(t *testing.T) {
 	name := "test: error."
 	err := errors.New(name)
-	response, statusCode := availability.ErrorResponse(err)
+	response, statusCode := ErrorResponse(err)
 
 	if statusCode != http.StatusServiceUnavailable {
 		t.Errorf("Wrong statuscode: %d - expected: %d", statusCode, http.StatusServiceUnavailable)
@@ -90,7 +89,7 @@ func TestBuildData(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		data := availability.BuildData(&test.Response, test.Threshold)
+		data := BuildData(&test.Response, test.Threshold)
 
 		if data.Blocked != test.Blocked {
 			t.Errorf("Blocked: %t - with Threshold %d, expected: %t", data.Blocked, test.Threshold, test.Blocked)

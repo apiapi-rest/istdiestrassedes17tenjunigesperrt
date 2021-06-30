@@ -7,10 +7,22 @@ import (
 	"os"
 	"time"
 
-	"apiapi.rest/istdiestrassedes17tenjunigesperrt/handler"
+	"github.com/pkg/errors"
 )
 
+type server struct {
+	router *http.ServeMux
+	// db, etc.
+}
+
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	log.Print("starting server...")
 
 	// Determine port for HTTP service.
@@ -23,19 +35,27 @@ func main() {
 	// Start HTTP server.
 	log.Printf("listening on port %s", port)
 
+	server := newServer()
+
 	s := &http.Server{
 		Addr:         fmt.Sprintf(":%s", port),
-		Handler:      handler.Mux(),
+		Handler:      server.router,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
 	if err := s.ListenAndServe(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return errors.Wrap(err, "ListenAndServe")
 	}
+	return nil
 }
 
-func Wtf() {
+func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.router.ServeHTTP(w, r)
+}
 
+func newServer() *server {
+	s := &server{router: http.NewServeMux()}
+	s.routes()
+	return s
 }
