@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"apiapi.rest/istdiestrassedes17tenjunigesperrt/availability"
@@ -11,13 +12,14 @@ import (
 func (s *server) handleRoot() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println("HandleRoot")
 		fmt.Fprintf(w, "Hello World!")
 	}
 }
 
 func (s *server) handleAvailability() http.HandlerFunc {
-
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println("HandleAvailability")
 		data, status := availability.AvailabilityResponse()
 
 		json, err := json.MarshalIndent(data, "", "	")

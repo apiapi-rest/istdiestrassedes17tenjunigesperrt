@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/pkg/errors"
 
@@ -39,14 +38,7 @@ func run() error {
 
 	server := newServer()
 
-	s := &http.Server{
-		Addr:         fmt.Sprintf(":%s", port),
-		Handler:      server.router,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
-
-	if err := s.ListenAndServe(); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", port), server.router); err != nil {
 		return errors.Wrap(err, "ListenAndServe")
 	}
 	return nil
