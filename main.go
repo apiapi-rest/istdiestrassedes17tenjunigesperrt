@@ -8,10 +8,12 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+
+	"github.com/gorilla/mux"
 )
 
 type server struct {
-	router *http.ServeMux
+	router *mux.Router
 	// db, etc.
 }
 
@@ -55,7 +57,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func newServer() *server {
-	s := &server{router: http.NewServeMux()}
+	s := &server{router: mux.NewRouter()}
 	s.routes()
 	return s
 }
