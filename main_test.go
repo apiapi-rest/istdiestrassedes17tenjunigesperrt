@@ -7,11 +7,12 @@ import (
 	"testing"
 
 	"apiapi.rest/istdiestrassedes17tenjunigesperrt/availability"
+	"github.com/julienschmidt/httprouter"
 )
 
 func TestHandleRoot(t *testing.T) {
 	srv := server{
-		router: http.NewServeMux(),
+		router: httprouter.New(),
 	}
 	srv.routes()
 	req := httptest.NewRequest("GET", "/", nil)
@@ -29,7 +30,7 @@ func TestHandleRoot(t *testing.T) {
 
 func TestAvailability(t *testing.T) {
 	srv := server{
-		router: http.NewServeMux(),
+		router: httprouter.New(),
 	}
 	srv.routes()
 	req := httptest.NewRequest("GET", "/availability", nil)
