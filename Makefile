@@ -19,7 +19,7 @@ cloud-build:
 cloud-run:
 	gcloud config set account ${GOOGLE_CLOUD_ACCOUNT}
 	gcloud config set project ${GOOGLE_CLOUD_PROJECT}
-	gcloud run deploy api --image gcr.io/${GOOGLE_CLOUD_PROJECT}/api --memory=128M --platform managed --region=europe-west1
+	gcloud run deploy api --image gcr.io/${GOOGLE_CLOUD_PROJECT}/api --memory=128Mi --platform managed --region=europe-west1
 
 # give the service account the permission to read secrets.
 # https://cloud.google.com/secret-manager/docs/access-control?hl=de

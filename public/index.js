@@ -13,7 +13,7 @@ window.onload = () => {
     .then((result) => {
       console.log(result);
 
-      if (result.success === true && result.blocked) {
+      if (result.success === true && result.data.blocked) {
         document.querySelector("#ja").classList.add("show");
       } else {
         document.querySelector("#nein").classList.add("show");
