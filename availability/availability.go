@@ -13,8 +13,8 @@ import (
 
 const (
 	travelMode        = maps.TravelModeDriving
-	travelOrigin      = "52.5162467446992,13.376336268075974"
-	travelDestination = "52.51280515463461,13.323774503739166"
+	travelOrigin      = "52.51280515463461,13.323774503739166"
+	travelDestination = "52.5162467446992,13.376336268075974"
 	threshold         = 3700
 )
 
